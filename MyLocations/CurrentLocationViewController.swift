@@ -31,6 +31,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
     updateLabels()
+    configureGetButton()
   }
   
   override func didReceiveMemoryWarning() {
@@ -56,8 +57,16 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     }
     
     // request location
-    startLocationManager()
+    if updateingLocation {
+      stopLocationManager()
+    } else {
+      location = nil
+      lastLocationError = nil
+      startLocationManager()
+    }
+
     updateLabels()
+    configureGetButton()
   }
   
   func showLocationServicesDeniedAlert() {
@@ -102,6 +111,14 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     }
   }
   
+  func configureGetButton() {
+    if updateingLocation {
+      getButton.setTitle("Stop", forState: .Normal)
+    } else {
+      getButton.setTitle("Get My Location", forState: .Normal)
+    }
+  }
+  
   func startLocationManager() {
     if CLLocationManager.locationServicesEnabled() {
       locationManager.delegate = self
@@ -132,6 +149,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     
     stopLocationManager()
     updateLabels()
+    configureGetButton()
   }
   
   func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -158,6 +176,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       if newLocation.horizontalAccuracy <= locationManager.desiredAccuracy {
         print(">> Desired Accuracy Acheved")
         stopLocationManager()
+        configureGetButton()
       }
     }
     
