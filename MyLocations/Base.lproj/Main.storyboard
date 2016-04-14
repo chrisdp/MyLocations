@@ -74,7 +74,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Tag" image="first" id="acW-dT-cKf"/>
                     <connections>
-                        <outlet property="addressLabelL" destination="VUG-jn-OM8" id="fZe-0p-iGi"/>
+                        <outlet property="addressLabel" destination="VUG-jn-OM8" id="6LQ-rS-dJX"/>
                         <outlet property="getButton" destination="9aM-xn-Uxl" id="rXO-AN-snJ"/>
                         <outlet property="latitudeLabel" destination="t5U-Jf-Dd5" id="els-yi-k8y"/>
                         <outlet property="longitudeLabel" destination="ptf-Oj-grE" id="84E-MD-4gp"/>
