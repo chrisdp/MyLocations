@@ -20,6 +20,7 @@ class LocationDetailsViewController: UITableViewController  {
   // instance vars
   var coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
   var placemark: CLPlacemark?
+  var categoryName = "No Category"
   
   // private global constant date formatter
   private let dateFormatter: NSDateFormatter = {
@@ -33,7 +34,7 @@ class LocationDetailsViewController: UITableViewController  {
     super.viewDidLoad()
     
     descriptionTextView.text = ""
-    categoryLabel.text = ""
+    categoryLabel.text = categoryName
     
     latitudeLabel.text = String(format: "%.8f", coordinate.latitude)
     longitudeLabel.text = String(format: "%.8f", coordinate.longitude)
@@ -101,6 +102,13 @@ class LocationDetailsViewController: UITableViewController  {
 
   @IBAction func cancel() {
     dismissViewControllerAnimated(true, completion: nil)
+  }
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "PickCategory" {
+      let controller = segue.destinationViewController as! CategoryPickerViewController
+      controller.selectedCategoryName = categoryName
+    }
   }
   
 }
