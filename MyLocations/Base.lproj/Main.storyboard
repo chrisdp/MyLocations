@@ -230,7 +230,7 @@
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detail" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GCX-Ih-Ufj">
                                                     <rect key="frame" x="263" y="12" width="44" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -285,7 +285,7 @@
                     <connections>
                         <outlet property="addressLabel" destination="GCX-Ih-Ufj" id="dvN-P2-W4N"/>
                         <outlet property="categoryLabel" destination="8GC-Jl-XGo" id="FYh-qt-WlG"/>
-                        <outlet property="dataLabel" destination="jsA-wd-6n4" id="hdY-1v-pUA"/>
+                        <outlet property="dateLabel" destination="jsA-wd-6n4" id="X55-Da-WVU"/>
                         <outlet property="descriptionTextView" destination="yfn-Ex-SnA" id="ERN-ir-LXs"/>
                         <outlet property="latitudeLabel" destination="aSg-qY-EdY" id="Dr5-27-5XY"/>
                         <outlet property="longitudeLabel" destination="YP3-c6-ROc" id="Dch-HB-n9D"/>
