@@ -32,9 +32,24 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       locationManager.requestWhenInUseAuthorization()
       return
     }
+    
+    if authStatus == .Denied || authStatus == .Restricted {
+      showLocationServicesDeniedAlert()
+      return
+    }
     locationManager.delegate = self
     locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     locationManager.startUpdatingLocation()
+  }
+  
+  func showLocationServicesDeniedAlert() {
+    let alert = UIAlertController(title: "Location Services Disabled", message: "Please enable location services for this app in Settings.", preferredStyle: .Alert)
+    
+    let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+    
+    alert.addAction(okAction)
+    
+    presentViewController(alert, animated: true, completion: nil)
   }
 
   override func viewDidLoad() {
