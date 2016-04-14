@@ -21,6 +21,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   
   // instance vars
   let locationManager = CLLocationManager()
+  var timer: NSTimer?
   
   // location vars
   var location: CLLocation?
@@ -167,14 +168,31 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
       locationManager.startUpdatingLocation()
       updateingLocation = true
+      timer = NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: #selector(CurrentLocationViewController.didTimeOut), userInfo: nil, repeats: false)
     }
   }
   
   func stopLocationManager() {
     if updateingLocation {
+      if let timer = timer {
+        timer.invalidate()
+      }
       locationManager.stopUpdatingLocation()
       locationManager.delegate = nil
       updateingLocation = false
+    }
+  }
+  
+  func didTimeOut() {
+    print(">> Request Timed Out")
+    
+    if location == nil {
+      stopLocationManager()
+      
+      lastLocationError = NSError(domain: "MyLocationsErrorDomain", code: 1, userInfo: nil)
+      
+      updateLabels()
+      configureGetButton()
     }
   }
   
