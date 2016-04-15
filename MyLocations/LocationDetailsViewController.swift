@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import Dispatch
 
 class LocationDetailsViewController: UITableViewController  {
   @IBOutlet weak var descriptionTextView: UITextView!
@@ -46,6 +47,10 @@ class LocationDetailsViewController: UITableViewController  {
     }
     
     dateLabel.text = formatDate(NSDate())
+    
+    let gesterReconginizer = UITapGestureRecognizer(target: self, action: #selector(LocationDetailsViewController.hideKeyboard(_:)))
+    gesterReconginizer.cancelsTouchesInView = false
+    tableView.addGestureRecognizer(gesterReconginizer)
   }
   
   func formatDate(date: NSDate) -> String {
@@ -81,6 +86,17 @@ class LocationDetailsViewController: UITableViewController  {
     
     return text
   }
+  
+  func hideKeyboard(gestureRecognizer: UIGestureRecognizer) {
+    let point = gestureRecognizer.locationInView(tableView)
+    let indexPath = tableView.indexPathForRowAtPoint(point)
+    
+    if indexPath != nil && indexPath!.section == 0 && indexPath!.row == 0 {
+      return
+    }
+    
+    descriptionTextView.resignFirstResponder()
+  }
 
   // MARK: - UITableViewDelegate
   override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -96,8 +112,29 @@ class LocationDetailsViewController: UITableViewController  {
     }
   }
   
+  override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+    if indexPath.section == 0 || indexPath.section == 1 {
+      return indexPath
+    } else {
+      return nil
+    }
+  }
+  
+  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    if indexPath.section == 0 && indexPath.row == 0 {
+      descriptionTextView.becomeFirstResponder()
+    }
+  }
+  
   @IBAction func done() {
-    dismissViewControllerAnimated(true, completion: nil)
+    //dismissViewControllerAnimated(true, completion: nil)
+    let hudView = HudView.hudInView(navigationController!.view, animated: true)
+    
+    hudView.text = "Tagged"
+    
+    afterDelay(0.8, closure:{
+      self.dismissViewControllerAnimated(true, completion: nil)
+    })
   }
 
   @IBAction func cancel() {
