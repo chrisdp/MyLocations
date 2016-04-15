@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 import Dispatch
 
 class LocationDetailsViewController: UITableViewController  {
@@ -22,6 +23,7 @@ class LocationDetailsViewController: UITableViewController  {
   var coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
   var placemark: CLPlacemark?
   var categoryName = "No Category"
+  var date = NSDate()
   
   // private global constant date formatter
   private let dateFormatter: NSDateFormatter = {
@@ -30,6 +32,9 @@ class LocationDetailsViewController: UITableViewController  {
     formatter.timeStyle = .ShortStyle
     return formatter
   }()
+  
+  // CoreData vars
+  var managedObjectContext: NSManagedObjectContext!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -46,7 +51,7 @@ class LocationDetailsViewController: UITableViewController  {
       addressLabel.text = "No Address Found"
     }
     
-    dateLabel.text = formatDate(NSDate())
+    dateLabel.text = formatDate(date)
     
     let gesterReconginizer = UITapGestureRecognizer(target: self, action: #selector(LocationDetailsViewController.hideKeyboard(_:)))
     gesterReconginizer.cancelsTouchesInView = false
@@ -131,6 +136,21 @@ class LocationDetailsViewController: UITableViewController  {
     let hudView = HudView.hudInView(navigationController!.view, animated: true)
     
     hudView.text = "Tagged"
+    
+    let location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext) as! Location
+    
+    location.locationDescription = descriptionTextView.text
+    location.category = categoryName
+    location.latitude = coordinate.latitude
+    location.longitude = coordinate.longitude
+    location.date = date
+    location.placemark = placemark
+    
+    do {
+      try managedObjectContext.save()
+    } catch {
+      fatalCoreDataError(error)
+    }
     
     afterDelay(0.8, closure:{
       self.dismissViewControllerAnimated(true, completion: nil)
