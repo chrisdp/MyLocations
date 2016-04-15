@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 import Dispatch
 
 class LocationDetailsViewController: UITableViewController  {
@@ -30,6 +31,9 @@ class LocationDetailsViewController: UITableViewController  {
     formatter.timeStyle = .ShortStyle
     return formatter
   }()
+  
+  // CoreData vars
+  var managedObjectContext: NSManagedObjectContext!
 
   override func viewDidLoad() {
     super.viewDidLoad()

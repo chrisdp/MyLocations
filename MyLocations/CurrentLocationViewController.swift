@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 
 class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate {
   
@@ -32,6 +33,9 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   var placemark: CLPlacemark?
   var performingReverseGeocoding = false
   var lastGeocodingError : NSError?
+  
+  // CodeData vars
+  var managedObjectContext: NSManagedObjectContext!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -214,7 +218,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   
   func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     let newLocation = locations.last!
-    print("didUpdateLocations \(newLocation)")
+    //print("didUpdateLocations \(newLocation)")
     
     // check if new location is a cached result
     if newLocation.timestamp.timeIntervalSinceNow < -5 {
@@ -285,6 +289,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
 
       controller.coordinate = location!.coordinate
       controller.placemark = placemark
+      controller.managedObjectContext = managedObjectContext
     }
   }
 }

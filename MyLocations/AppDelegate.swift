@@ -13,10 +13,39 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
+  lazy var managedObjectContext: NSManagedObjectContext = {
+    guard let modelURL = NSBundle.mainBundle().URLForResource("DataModel", withExtension: "momd") else {
+      fatalError("Could not find data model in app bundle")
+    }
+    
+    guard let model = NSManagedObjectModel(contentsOfURL: modelURL) else {
+      fatalError("Error initializing model from: \(modelURL)")
+    }
+    
+    let urls = NSFileManager.defaultManager().URLsForDirectory( .DocumentDirectory, inDomains: .UserDomainMask)
+    let documentsDirectory = urls[0]
+    print(documentsDirectory)
+    let storeURL = documentsDirectory.URLByAppendingPathComponent("DataStore.sqlite")
+    
+    do {
+      let coordinator = NSPersistentStoreCoordinator( managedObjectModel: model)
+      
+      try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
+      
+      let context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+      context.persistentStoreCoordinator = coordinator
+      return context
+    } catch {
+      fatalError("Error adding persistent store at \(storeURL): \(error)")
+    }
+  }()
 
-
-  func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-    // Override point for customization after application launch.
+  func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+    let tabBarController = window!.rootViewController as! UITabBarController
+    if let tabBarViewControllers = tabBarController.viewControllers {
+      let currentLocationViewController = tabBarViewControllers[0] as! CurrentLocationViewController
+      currentLocationViewController.managedObjectContext = managedObjectContext
+    }
     return true
   }
 
@@ -41,33 +70,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationWillTerminate(application: UIApplication) {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
   }
-  
-  lazy var managedObjectContext: NSManagedObjectContext = {
-    guard let modelURL = NSBundle.mainBundle().URLForResource("DataModel", withExtension: "momd") else {
-      fatalError("Could not find data model in app bundle")
-    }
-    
-    guard let model = NSManagedObjectModel(contentsOfURL: modelURL) else {
-      fatalError("Error initializing model from: \(modelURL)")
-    }
-    
-    let urls = NSFileManager.defaultManager().URLsForDirectory( .DocumentDirectory, inDomains: .UserDomainMask)
-    let documentsDirectory = urls[0]
-    let storeURL = documentsDirectory.URLByAppendingPathComponent("DataStore.sqlite")
-    
-    do {
-      let coordinator = NSPersistentStoreCoordinator( managedObjectModel: model)
-      
-      try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
-      
-      let context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-      context.persistentStoreCoordinator = coordinator
-      return context
-    } catch {
-        fatalError("Error adding persistent store at \(storeURL): \(error)")
-    }
-  }()
-
-
 }
 
