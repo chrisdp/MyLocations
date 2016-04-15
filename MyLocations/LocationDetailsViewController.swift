@@ -104,6 +104,12 @@ class LocationDetailsViewController: UITableViewController  {
     dismissViewControllerAnimated(true, completion: nil)
   }
   
+  @IBAction func categoryPickerDidPickCategory(segue: UIStoryboardSegue) {
+    let controller = segue.sourceViewController as! CategoryPickerViewController
+    categoryName = controller.selectedCategoryName
+    categoryLabel.text = categoryName
+  }
+  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == "PickCategory" {
       let controller = segue.destinationViewController as! CategoryPickerViewController
