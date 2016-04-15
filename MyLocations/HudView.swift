@@ -18,6 +18,7 @@ class HudView: UIView {
     view.addSubview(hudView)
     view.userInteractionEnabled = false
     
+    hudView.showAnimated(animated)
     return hudView
   }
   
@@ -40,7 +41,7 @@ class HudView: UIView {
     if let image = UIImage(named: "Checkmark") {
       let imagePoint = CGPoint(
         x: center.x - round(image.size.width / 2),
-        y: center.y - round(image.size.height / 2)
+        y: center.y - round(image.size.height / 2) - boxHeight / 8
       )
       
       image.drawAtPoint(imagePoint)
@@ -59,5 +60,17 @@ class HudView: UIView {
     )
     
     text.drawAtPoint(textPoint, withAttributes: attribs)
+  }
+  
+  func showAnimated(animated: Bool) {
+    if animated {
+      alpha = 0
+      transform = CGAffineTransformMakeScale(1.3, 1.3)
+      
+      UIView.animateWithDuration(0.3, animations: {
+        self.alpha = 1
+        self.transform = CGAffineTransformIdentity
+      })
+    }
   }
 }
